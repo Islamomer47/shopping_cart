@@ -9,6 +9,8 @@ export const userLogin = createAsyncThunk("auth/login", async (credentials) => {
     const { token, user } = response.data;
     // Set the token in cookies
     document.cookie = `token=${token}; path=/;`;
+    localStorage.setItem("token", JSON.stringify(token));
+
     return { user, token };
   } catch (error) {
     // Handle error (e.g., incorrect credentials)

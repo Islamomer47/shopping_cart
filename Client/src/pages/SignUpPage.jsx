@@ -5,7 +5,11 @@ import { userSignUp } from "../features/authSlice";
 import { useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
-  const [userData, setUserData] = useState({ name: "", password: "" });
+  const [userData, setUserData] = useState({
+    username: "",
+    password: "",
+    role: "user",
+  });
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -20,9 +24,9 @@ const SignUpPage = () => {
     <form onSubmit={handleSignUp}>
       <input
         type="text"
-        placeholder="Name"
-        value={userData.name}
-        onChange={(e) => setUserData({ ...userData, name: e.target.value })}
+        placeholder="username"
+        value={userData.username}
+        onChange={(e) => setUserData({ ...userData, username: e.target.value })}
       />
       <input
         type="password"

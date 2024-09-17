@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import { userLogin } from "../features/authSlice";
+import { getTokenFromLocalStorage } from "../utils/cookieUtils";
+import { jwtDecode } from "jwt-decode";
 
 const LoginPage = () => {
   const [credentials, setCredentials] = useState({
@@ -9,26 +11,38 @@ const LoginPage = () => {
     password: "",
   });
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const action = await dispatch(userLogin(credentials)); // Await the dispatch
+      const action = await dispatch(userLogin(credentials));
       if (userLogin.fulfilled.match(action)) {
-        // Check if the login was successful
-        const { role } = action.payload; // Extract role from the response payload
-        if (role === "admin") {
-          navigate("/admin-dashboard"); // Navigate to admin dashboard
-        } else if (role === "user") {
-          navigate("/customer-dashboard"); // Navigate to customer dashboard
+        // Retrieve the token from localStorage
+        const token = getTokenFromLocalStorage();
+
+        if (token) {
+          try {
+            const decodedToken = jwtDecode(token);
+            const { role } = decodedToken;
+            console.log("Decoded Role:", role);
+
+            if (role === "admin") {
+              navigate("/admin-dashboard");
+            } else if (role === "user") {
+              navigate("/");
+            }
+          } catch (error) {
+            console.error("Error decoding token:", error);
+          }
+        } else {
+          console.error("No token found");
         }
       } else {
-        // Handle errors or unsuccessful login
         console.error("Login failed:", action.error);
       }
     } catch (error) {
-      console.error("Login error:", error); // Catch any errors
+      console.error("Login error:", error);
     }
   };
 

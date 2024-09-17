@@ -6,28 +6,28 @@ import SignUpPage from "./pages/SignUpPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import Cart from "./components/Cart";
-// import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/sign-up" element={<SignUpPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
         <Route
           path="/admin-dashboard"
           element={
-            // <ProtectedRoute role="admin">
-            <AdminDashboard />
-            // </ProtectedRoute>
+            <ProtectedRoute role="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
           }
         />
         <Route
           path="/"
           element={
-            // <ProtectedRoute role="user">
-            <CustomerDashboard />
-            // </ProtectedRoute>
+            <ProtectedRoute role="user">
+              <CustomerDashboard />
+            </ProtectedRoute>
           }
         />
         <Route path="/cart" element={<Cart />} />
