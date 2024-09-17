@@ -15,7 +15,6 @@ const CustomerDashboard = () => {
 
   return (
     <div>
-      <h1>Customer Dashboard</h1>
       <ProductList products={products} />
       <Cart /> {/* Display cart */}
     </div>

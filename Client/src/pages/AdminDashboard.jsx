@@ -14,12 +14,14 @@ const AdminDashboard = () => {
   }, [dispatch]);
 
   const handleAddProduct = (productData) => {
-    dispatch(createProduct(productData));
+    dispatch(createProduct(productData)).then(() => {
+      dispatch(getAllProducts());
+    });
   };
 
   return (
     <div>
-      <h1>Admin Dashboard</h1>
+      <h1 className="text-center">Admin Dashboard</h1>
       <ProductForm onSubmit={handleAddProduct} />
       <ProductList products={list} />
     </div>

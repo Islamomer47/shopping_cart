@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { userLogin } from "../features/authSlice";
 import { getTokenFromLocalStorage } from "../utils/cookieUtils";
 import { jwtDecode } from "jwt-decode";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   const [credentials, setCredentials] = useState({
@@ -23,10 +24,15 @@ const LoginPage = () => {
 
         if (token) {
           try {
+            // Decode the token
             const decodedToken = jwtDecode(token);
             const { role } = decodedToken;
             console.log("Decoded Role:", role);
 
+            // Store the role in localStorage
+            localStorage.setItem("userRole", role);
+
+            // Navigate based on role
             if (role === "admin") {
               navigate("/admin-dashboard");
             } else if (role === "user") {
@@ -47,25 +53,50 @@ const LoginPage = () => {
   };
 
   return (
-    <form onSubmit={handleLogin}>
-      <input
-        type="text"
-        placeholder="Username"
-        value={credentials.username}
-        onChange={(e) =>
-          setCredentials({ ...credentials, username: e.target.value })
-        }
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={credentials.password}
-        onChange={(e) =>
-          setCredentials({ ...credentials, password: e.target.value })
-        }
-      />
-      <button type="submit">Login</button>
-    </form>
+    <div className="mt-16">
+      <h1 className="text-center text-4xl mb-5"> Login </h1>
+      <form
+        onSubmit={handleLogin}
+        className="max-w-sm mx-auto p-6 bg-white rounded-lg shadow-md space-y-4"
+      >
+        <input
+          type="text"
+          placeholder="Username"
+          value={credentials.username}
+          onChange={(e) =>
+            setCredentials({ ...credentials, username: e.target.value })
+          }
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={credentials.password}
+          onChange={(e) =>
+            setCredentials({ ...credentials, password: e.target.value })
+          }
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        <button
+          type="submit"
+          className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md transition duration-200"
+        >
+          Login
+        </button>
+      </form>
+
+      <div className="text-center mt-4">
+        <p className="text-gray-600">Don't have an account?</p>
+        <Link
+          to="/signup"
+          className="text-blue-500 hover:text-blue-700 font-semibold"
+        >
+          Sign Up
+        </Link>
+      </div>
+    </div>
   );
 };
 
