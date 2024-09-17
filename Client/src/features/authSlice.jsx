@@ -5,9 +5,9 @@ import { loginUser, registerUser } from "../api/apiClient";
 export const userLogin = createAsyncThunk("auth/login", async (credentials) => {
   try {
     const response = await loginUser(credentials);
-    const { token, user } = response.data;
-    localStorage.setItem("token", token); // Use localStorage only
-    return { user, token };
+    const { role } = response.data; // Extract the role from the response
+    localStorage.setItem("role", role); // Store the role in localStorage
+    return { role };
   } catch (error) {
     throw new Error("Login failed");
   }

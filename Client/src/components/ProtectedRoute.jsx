@@ -1,7 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
 
 const ProtectedRoute = ({ children, role }) => {
   console.log("ProtectedRoute rendered");
@@ -9,21 +8,9 @@ const ProtectedRoute = ({ children, role }) => {
   const { isAuthenticated } = useSelector((state) => state.auth);
   console.log("isAuthenticated:", isAuthenticated);
 
-  // Retrieve the token from localStorage
-  const token = localStorage.getItem("token");
-  console.log("Token:", token);
-
-  let userRole = null;
-
-  if (token) {
-    try {
-      const decodedToken = jwtDecode(token);
-      userRole = decodedToken.role;
-      console.log("Decoded Role:", userRole);
-    } catch (error) {
-      console.error("Error decoding token:", error);
-    }
-  }
+  // Retrieve the role from localStorage
+  const userRole = localStorage.getItem("role");
+  console.log("User Role from localStorage:", userRole);
 
   if (!isAuthenticated) {
     console.log("User not authenticated, redirecting to login...");

@@ -23,7 +23,7 @@ exports.login = async (req, res, next) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
     });
-    res.status(200).json({ success: true, token });
+    res.status(200).json({ success: true, token, role: user.role });
   } catch (error) {
     next(error);
   }

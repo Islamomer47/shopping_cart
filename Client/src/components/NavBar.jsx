@@ -1,24 +1,27 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-// Helper function to clear cookies
-const clearCookies = () => {
-  document.cookie.split(";").forEach((cookie) => {
-    const name = cookie.split("=")[0];
-    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
-  });
-};
-
 const NavBar = () => {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    // Clear local storage and cookies
-    localStorage.clear();
-    clearCookies();
+  const handleLogout = async () => {
+    try {
+      // Call the logout API
+      const response = await fetch("http://localhost:5000/api/auth/logout", {
+        method: "POST", // Use POST for logout
+        credentials: "include", // Include credentials (cookies)
+      });
 
-    // Redirect to login page
-    navigate("/login");
+      if (!response.ok) {
+        console.error("Failed to logout:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      // Clear local storage and navigate to login in all cases
+      localStorage.clear();
+      navigate("/login");
+    }
   };
 
   return (

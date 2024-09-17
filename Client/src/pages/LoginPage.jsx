@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { userLogin } from "../features/authSlice";
-import { getTokenFromLocalStorage } from "../utils/cookieUtils";
-import { jwtDecode } from "jwt-decode";
 import { Link } from "react-router-dom";
 
 const LoginPage = () => {
@@ -19,30 +17,18 @@ const LoginPage = () => {
     try {
       const action = await dispatch(userLogin(credentials));
       if (userLogin.fulfilled.match(action)) {
-        // Retrieve the token from localStorage
-        const token = getTokenFromLocalStorage();
+        // Retrieve the role from the action payload
+        const { role } = action.payload;
+        console.log("Role:", role);
 
-        if (token) {
-          try {
-            // Decode the token
-            const decodedToken = jwtDecode(token);
-            const { role } = decodedToken;
-            console.log("Decoded Role:", role);
+        // Store the role in localStorage
+        localStorage.setItem("role", role);
 
-            // Store the role in localStorage
-            localStorage.setItem("userRole", role);
-
-            // Navigate based on role
-            if (role === "admin") {
-              navigate("/admin-dashboard");
-            } else if (role === "user") {
-              navigate("/");
-            }
-          } catch (error) {
-            console.error("Error decoding token:", error);
-          }
-        } else {
-          console.error("No token found");
+        // Navigate based on role
+        if (role === "admin") {
+          navigate("/admin-dashboard");
+        } else if (role === "user") {
+          navigate("/");
         }
       } else {
         console.error("Login failed:", action.error);
@@ -54,7 +40,7 @@ const LoginPage = () => {
 
   return (
     <div className="mt-16">
-      <h1 className="text-center text-4xl mb-5"> Login </h1>
+      <h1 className="text-center text-4xl mb-5">Login</h1>
       <form
         onSubmit={handleLogin}
         className="max-w-sm mx-auto p-6 bg-white rounded-lg shadow-md space-y-4"
